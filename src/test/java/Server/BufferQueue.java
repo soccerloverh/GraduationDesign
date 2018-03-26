@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * 缓存队列
@@ -13,9 +14,8 @@ import java.util.Queue;
  */
 public class BufferQueue {
     private static final int MAX_SIZE = 4;
-    private static Queue<BufferedImage> queue = new LinkedList<BufferedImage>();
+    private static Queue<BufferedImage> queue = new ArrayBlockingQueue<BufferedImage>(MAX_SIZE);
     static Logger logger = Logger.getLogger(BufferQueue.class.getName());
-    static ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     /**
      * 向缓存队列中添加图片
@@ -24,11 +24,10 @@ public class BufferQueue {
     public static void add(BufferedImage image){
             if(queue.size() < MAX_SIZE){        //  如果队列没有满
                 queue.offer(image);                   //  添加
-                out.reset();                          //  重置流
             }else{
-                queue.poll();                         //  删除队列头
+                Object obj = queue.poll();            //  删除队列头
+                obj = null;
                 queue.offer(image);                   //  添加
-                out.reset();                          //  重置流
             }
     }
 
@@ -38,5 +37,9 @@ public class BufferQueue {
      */
     public static BufferedImage peek(){
         return queue.peek();
+    }
+
+    public static void release(){
+        queue.clear();
     }
 }
