@@ -22,7 +22,7 @@ public class BufferQueue {
      * @param image
      */
     public static void add(BufferedImage image){
-            if(queue.size() <= MAX_SIZE){        //  如果队列没有满
+            if(queue.size() < MAX_SIZE){        //  如果队列没有满
                 queue.offer(image);                   //  添加
                 out.reset();                          //  重置流
             }else{
