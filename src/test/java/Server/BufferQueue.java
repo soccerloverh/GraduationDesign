@@ -14,7 +14,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class BufferQueue {
     private static final int MAX_SIZE = 4;
-    private static Queue<BufferedImage> queue = new ArrayBlockingQueue<BufferedImage>(MAX_SIZE);
+     static Queue<BufferedImage> queue = new ArrayBlockingQueue<BufferedImage>(MAX_SIZE);
     static Logger logger = Logger.getLogger(BufferQueue.class.getName());
 
     /**

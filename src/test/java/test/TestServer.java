@@ -1,16 +1,14 @@
 package test;
 
-import Server.BufferQueue;
-import io.netty.bootstrap.Bootstrap;
+
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
+    import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
@@ -74,30 +72,39 @@ class ServerHandler extends ChannelInboundHandlerAdapter{
     private void sendImage(){
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Toolkit kit = Toolkit.getDefaultToolkit();
-        for(int i = 0; i < 1; i++){
+        for(; ; ){
             BufferedImage image = null;
             try {
                 image = new Robot().createScreenCapture(new Rectangle(0, 0, kit.getScreenSize().width, kit.getScreenSize().height));
-            } catch (AWTException e) {
-                e.printStackTrace();
-            }
-            try {
                 ImageIO.write(image,"png",out);
-                ByteBuf buffer = Unpooled.copiedBuffer(out.toByteArray());
-                writeBack(buffer);
+                writeBack(out.toByteArray());
+                out.reset();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (AWTException e) {
                 e.printStackTrace();
             }
         }
     }
+
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
     }
 
-    public void writeBack(ByteBuf buffer){
+    public void writeBack(byte[] res){
+        ByteBuf buffer = wrapPackage(res);
         System.out.println("[Server] -发送数据包,大小:"+buffer.array().length);
         ctx.writeAndFlush(buffer);
+    }
+
+    private ByteBuf wrapPackage(byte[] res){
+        ByteBuf buf = Unpooled.buffer(res.length+2);
+        buf.writeBytes(res);
+        buf.writeByte(-128);
+        buf.writeByte(-128);
+        return buf;
     }
 }

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Class-Path: netty-all-4.1.19.Final.jar spring-core-4.0.6.RELEASE.jar s
+ pring-context-4.0.6.RELEASE.jar spring-expression-4.0.6.RELEASE.jar s
+ pring-context-support-4.0.6.RELEASE.jar log4j-1.2.17.jar aopalliance-
+ 1.0.jar beautyeye_lnf.jar spring-beans-4.0.6.RELEASE.jar spring-aop-4
+ .0.6.RELEASE.jar commons-logging-1.1.3.jar
+Main-Class: test.TestClient
+
