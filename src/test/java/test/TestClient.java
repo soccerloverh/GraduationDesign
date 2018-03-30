@@ -1,6 +1,7 @@
 package test;
 
-import Server.*;
+import GUI.GBC;
+import GUI.MyLabel;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -18,14 +19,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
-import Server.*;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**

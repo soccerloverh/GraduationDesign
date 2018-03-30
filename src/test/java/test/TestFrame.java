@@ -1,7 +1,7 @@
 package test;
 
-import Server.Frame;
-import Server.Scanner;
+import Server.Frame.Frame;
+import Server.Scanner.Scanner;
 
 import java.io.IOException;
 

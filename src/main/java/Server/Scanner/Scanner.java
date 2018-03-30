@@ -1,12 +1,10 @@
-package Server;
+package Server.Scanner;
 
+import Server.Buffer.BufferQueue;
 import org.apache.log4j.Logger;
-import sun.awt.image.BufferedImageDevice;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * Created by hck on 2018/3/23.

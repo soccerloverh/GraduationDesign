@@ -1,6 +1,6 @@
 package test;
 
-import Server.Scanner;
+import Server.Scanner.Scanner;
 
 /**
  * Created by hck on 2018/3/23.

@@ -1,9 +1,7 @@
-package Server;
+package Server.Buffer;
 
 import org.apache.log4j.Logger;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 

@@ -1,7 +1,10 @@
-package Server;
+package Server.Frame;
 
+import GUI.GBC;
+import GUI.MyLabel;
+import Server.Buffer.BufferQueue;
+import Server.Scanner.Scanner;
 import org.apache.log4j.Logger;
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 import javax.imageio.ImageIO;
@@ -9,14 +12,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 /**
  * Created by hck on 2018/3/23.
  */
-public class Frame {
+public class Frame implements Runnable{
     private static JFrame frame;
     private static JPanel basePanel;
     private static JButton startButton;
@@ -27,6 +28,11 @@ public class Frame {
     private static boolean flag = false;
 
     public Frame() {
+        try {
+            init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void init() throws IOException {
@@ -46,9 +52,9 @@ public class Frame {
         basePanel.setLayout(new GridBagLayout());                           // 设置GirdBag布局管理器
 
         video = new MyLabel("video");                                    // 初始化视频显示区域
-        video.setImage(ImageIO.read(Frame.class.getClassLoader().getResourceAsStream("Orbit.png")));
+//        video.setImage(ImageIO.read(Frame.class.getClassLoader().getResourceAsStream("Orbit.png")));
         video.repaint();
-        basePanel.add(video, new GBC(0, 0, 6, 1).setFill(GBC.BOTH).setIpad(500, 350).setWeight(100, 100));
+        basePanel.add(video, new GBC(0, 0, 8, 1).setFill(GBC.BOTH).setIpad(500, 350).setWeight(100, 100));
 
         startButton = new JButton("Start");                             // 初始化开始按钮
         startButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green));
@@ -59,33 +65,33 @@ public class Frame {
         basePanel.add(endButton, new GBC(1, 1, 1, 1).setWeight(0, 0));
 
         info = new JTextField();
-        info.setEditable(false);                                             // 初始化Info
+//        info.setEditable(false);                                             // 初始化Info
         basePanel.add(info, new GBC(2, 1, 6, 1).setFill(GBC.HORIZONTAL).setWeight(0, 0));
 
         initActionListener();                                                // 初始化开始结束按钮的时间监听
 
         frame.add(basePanel);                                                // 添加Jpanel到Frame
         frame.setVisible(true);                                              // 设置Frame为可见
-        startRepaint();                                                      // 开始循环遍历标志位,是否需要开始渲染界面
     }
 
     /**
      * 循环判断标识位,如果为true 就间隔20毫秒刷新一次界面。否则再100毫秒后再去轮询标志位
      */
-    private static void startRepaint() {
-        for (; ; ) {
-            try {
-                if (flag) {
-                    video.setImage(BufferQueue.peek());     //  从缓存队列中获取一张图片
-                    video.repaint();                        //  重绘Lable
-                    Thread.sleep(10);
-                } else {
-                    Thread.sleep(500);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    @Override
+    public void run() {
+//        for (; ; ) {
+//            try {
+//                if (flag) {
+//                    video.setImage(BufferQueue.peek());     //  从缓存队列中获取一张图片
+//                    video.repaint();                        //  重绘Lable
+//                    Thread.sleep(20);
+//                } else {
+//                    Thread.sleep(500);
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private static void initActionListener() {
