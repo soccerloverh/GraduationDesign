@@ -1,4 +1,4 @@
-package GUI;
+package GUIModule;
 
 import java.awt.*;
 

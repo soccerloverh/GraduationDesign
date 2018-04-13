@@ -30,11 +30,13 @@ public class Client {
                 });
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
         f = bootstrap.connect(host, 9999).sync();
+        f.channel().closeFuture().sync();
     }
 
     public static void disConnect(){
         if(ClientHandle.ctx != null){
-            ClientHandle.ctx.close();
+            ClientHandle.ctx.channel().close();
+            System.out.println("关闭连接");
         }
     }
 }

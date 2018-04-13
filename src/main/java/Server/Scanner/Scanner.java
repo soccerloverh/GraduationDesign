@@ -55,7 +55,6 @@ public class Scanner implements Runnable {
     public static void stopCatchScreen() {
         flag = false;
         BufferQueue.release();
-        logger.info("停止采集图片,此次一共采集 " + count + " 张图片");
     }
 
     @Override
@@ -66,8 +65,7 @@ public class Scanner implements Runnable {
                     Thread.sleep(500);
                 } else {
                     catchScreen();
-                    Thread.sleep(20);
-                    count++;
+                    Thread.sleep(10);
                 }
             } catch (InterruptedException e) {
             }
@@ -80,6 +78,7 @@ public class Scanner implements Runnable {
     private static void catchScreen() {
         BufferedImage image = robot.createScreenCapture(new Rectangle(0, 0, screen.width, screen.height));
         BufferQueue.add(image);
+//        Frame.paint(image);
     }
 
 

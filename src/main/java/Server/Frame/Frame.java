@@ -1,8 +1,7 @@
 package Server.Frame;
 
-import GUI.GBC;
-import GUI.MyLabel;
-import Server.Buffer.BufferQueue;
+import GUIModule.GBC;
+import GUIModule.MyLabel;
 import Server.Scanner.Scanner;
 import org.apache.log4j.Logger;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
@@ -12,12 +11,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
  * Created by hck on 2018/3/23.
  */
-public class Frame implements Runnable{
+public class Frame{
     private static JFrame frame;
     private static JPanel basePanel;
     private static JButton startButton;
@@ -25,17 +25,12 @@ public class Frame implements Runnable{
     private static MyLabel video;
     private static JTextField info;
     private static Logger logger = Logger.getLogger(Frame.class);
-    private static boolean flag = false;
 
     public Frame() {
-        try {
-            init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        init();
     }
 
-    public static void init() throws IOException {
+    public static void init() {
         try {
             UIManager.put("RootPane.setupButtonVisible", false);
             org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
@@ -52,7 +47,11 @@ public class Frame implements Runnable{
         basePanel.setLayout(new GridBagLayout());                           // 设置GirdBag布局管理器
 
         video = new MyLabel("video");                                    // 初始化视频显示区域
-//        video.setImage(ImageIO.read(Frame.class.getClassLoader().getResourceAsStream("Orbit.png")));
+        try {
+            video.setImage(ImageIO.read(Frame.class.getClassLoader().getResourceAsStream("Orbit.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         video.repaint();
         basePanel.add(video, new GBC(0, 0, 8, 1).setFill(GBC.BOTH).setIpad(500, 350).setWeight(100, 100));
 
@@ -74,24 +73,10 @@ public class Frame implements Runnable{
         frame.setVisible(true);                                              // 设置Frame为可见
     }
 
-    /**
-     * 循环判断标识位,如果为true 就间隔20毫秒刷新一次界面。否则再100毫秒后再去轮询标志位
-     */
-    @Override
-    public void run() {
-//        for (; ; ) {
-//            try {
-//                if (flag) {
-//                    video.setImage(BufferQueue.peek());     //  从缓存队列中获取一张图片
-//                    video.repaint();                        //  重绘Lable
-//                    Thread.sleep(20);
-//                } else {
-//                    Thread.sleep(500);
-//                }
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+
+    public static void paint(BufferedImage image){
+        video.setImage(image);
+        video.repaint();
     }
 
     private static void initActionListener() {
@@ -99,25 +84,20 @@ public class Frame implements Runnable{
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logger.info("开始播放");
+                logger.info("开始共享");
                 Scanner.startCatchScreen();
-                flag = true;
             }
         });
         //  添加结束按钮监听事件
         endButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logger.info("结束播放");
+                logger.info("结束共享");
                 Scanner.stopCatchScreen();
-                flag = false;
                 try {
-                    video.setImage(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("Orbit.png")));
-                    video.repaint();
+                    paint(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("Orbit.png")));
                 } catch (IOException e1) {
                     e1.printStackTrace();
-                }finally {
-                    System.gc();
                 }
             }
         });

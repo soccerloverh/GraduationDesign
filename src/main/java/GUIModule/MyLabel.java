@@ -1,5 +1,5 @@
 
-package GUI;
+package GUIModule;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,6 @@ public class MyLabel extends JLabel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);
-
+        g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
     }
 }

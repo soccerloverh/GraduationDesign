@@ -15,6 +15,7 @@ public class ClientHandle extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
+        this.ctx = ctx;
         ctx.writeAndFlush(Unpooled.copiedBuffer("Hello".getBytes()));
     }
 

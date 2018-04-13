@@ -10,7 +10,7 @@ import Server.Scanner.Scanner;
 public class ServerBoot {
     public static void main(String[] args) {
         new Thread(Scanner.getInstance()).start();      // 开启采集器
-        new Thread(new Frame()).start();                // 创建界面
+        new Frame();                // 创建界面
         Server.start();
     }
 }

@@ -2,10 +2,8 @@ package Client.Frame;
 
 import Client.Buffer.ClientBufferQueue;
 import Client.Net.Client;
-import GUI.GBC;
-import GUI.MyLabel;
-
-
+import GUIModule.GBC;
+import GUIModule.MyLabel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -29,14 +27,10 @@ public class ClientFrame implements Runnable{
     private static boolean flag = false;
 
     public ClientFrame() {
-        try {
-            init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        init();
     }
 
-    public void init() throws IOException {
+    public void init() {
         try {
             UIManager.put("RootPane.setupButtonVisible", false);
             org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
@@ -53,7 +47,11 @@ public class ClientFrame implements Runnable{
         basePanel.setLayout(new GridBagLayout());                           // 设置GirdBag布局管理器
 
         video = new MyLabel("video");                                    // 初始化视频显示区域
-//        video.setImage(ImageIO.read(ClientFrame.class.getClassLoader().getResourceAsStream("Orbit.png")));
+        try {
+            video.setImage(ImageIO.read(ClientFrame.class.getClassLoader().getResourceAsStream("Orbit.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         video.repaint();
         basePanel.add(video, new GBC(0, 0, 8, 1).setFill(GBC.BOTH).setIpad(500, 350).setWeight(100, 100));
 
@@ -143,6 +141,11 @@ public class ClientFrame implements Runnable{
                     Thread.sleep(500);
                     continue;
                 }
+//                if(ClientBufferQueue.img_queue.size() < 16){
+//                    Thread.sleep(500);
+//                    System.out.println("缓冲中....");
+//                    continue;
+//                }
                 video.setImage(ClientBufferQueue.img_queue.poll());
                 video.repaint();
                 Thread.sleep(20);

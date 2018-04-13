@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,12 +15,13 @@ import java.io.IOException;
 /**
  * Created by hck on 2018/3/28.
  */
-public class ServerHandle extends ChannelInboundHandlerAdapter implements Runnable{
+public class ServerHandle extends ChannelInboundHandlerAdapter implements Runnable {
     ChannelHandlerContext ctx;
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         this.ctx = ctx;
-        System.out.println(ctx.channel().toString()+" 已连接...");
+        System.out.println(ctx.channel().toString() + " 已连接...");
         super.channelRegistered(ctx);
     }
 
@@ -29,11 +31,11 @@ public class ServerHandle extends ChannelInboundHandlerAdapter implements Runnab
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         String request = new String(bytes);
-        System.out.println("客户端发来请求:"+request);
+        System.out.println("客户端发来请求:" + request);
         sendImage();
     }
 
-    private void sendImage(){
+    private void sendImage() {
         new Thread(this).start();
     }
 
@@ -57,33 +59,22 @@ public class ServerHandle extends ChannelInboundHandlerAdapter implements Runnab
     }
 
 
-    private ByteBuf wrapPackage(byte[] res){
-        ByteBuf buf = Unpooled.buffer(res.length+2);
-        buf.writeBytes(res);
-        buf.writeByte(-128);
-        buf.writeByte(-128);
-        return buf;
-    }
-
     @Override
     public void run() {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        for(; ; ){
-            BufferedImage image = null;
+        for (; ; ) {
+            if (!ctx.channel().isActive()) {
+                break;
+            }
+            if (!BufferQueue.isEmpty()) {
+                byte[] bytes = BufferQueue.peek();
+                ByteBuf buf = Unpooled.buffer(bytes.length);
+                buf.writeBytes(bytes);
+                ctx.writeAndFlush(buf);
+                continue;
+            }
             try {
-                image = BufferQueue.peek();
-                if(image != null){
-                    ImageIO.write(image,"png",out);
-                    ByteBuf buffer = wrapPackage(out.toByteArray());
-                    System.out.println("[Server] -发送数据包,大小:"+buffer.array().length);
-                    try{
-                        ctx.writeAndFlush(buffer);
-                    }catch (RuntimeException e){
-                        break;
-                    }
-                    out.reset();
-                }
-            } catch (IOException e) {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

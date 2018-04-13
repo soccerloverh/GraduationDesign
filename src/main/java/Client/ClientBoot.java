@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class ClientBoot {
     public static void main(String[] args) throws IOException {
-        new Thread(new ClientBufferQueue()).start();
+//        new Thread(new ClientBufferQueue()).start();
         new Thread(new ClientFrame()).start();
     }
 }

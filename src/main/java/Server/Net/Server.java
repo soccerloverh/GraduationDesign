@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
  */
 public class Server {
     private static Logger log = Logger.getLogger(Server.class);
+
     public static void start() {
         //  引导
         ServerBootstrap bootstrap = new ServerBootstrap();
